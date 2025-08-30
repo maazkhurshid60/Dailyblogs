@@ -53,7 +53,7 @@
             </div>
             <!-- File -->
             <div class="mb-3">
-                <label for="image" class="form-label">Blog Description</label>
+                <label for="image" class="form-label">Blog Image</label>
                 <input type="file" name="image" id="image">
             </div>
             <!-- Submit Button -->

@@ -25,12 +25,12 @@ class BlogController extends Controller
 
         $data = $request->validate([
             'title' => 'required|max:255',
-            'desc' => 'required|string|min:100',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'author' => 'required|string|max:255',
+            'desc' => 'required|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
         ]);
 
-        $data = $request->only(['title', 'desc' , 'author']);
+        $data = $request->only(['title', 'desc', 'author']);
 
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
@@ -53,18 +53,33 @@ class BlogController extends Controller
 
         $data = $request->validate([
             'title' => 'required|max:255',
-            'desc' => 'required|string|min:100',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'author' => 'required|string|max:255',
+            'desc' => 'required|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
         ]);
 
         $blog = Blog::findOrFail($id);
+
+         if ($request->hasFile('image')) {
+        // Delete old image if exists
+        if ($blog->image && file_exists(public_path($blog->image))) {
+            unlink(public_path($blog->image));
+        }
+
+        $imageName = time().'.'.$request->image->extension();
+        $request->image->move(public_path('uploads/blogs'), $imageName);
+        $data['image'] = 'uploads/blogs/'.$imageName;
+    } else {
+        
+        $data['image'] = $blog->image;
+    }
 
         // Update blog
         $blog->update([
             'title' => $data['title'],
             'desc' => $data['desc'],
             'author' => $data['author'],
+            'image' => $data['image'],
         ]);
         // dd($blog);
 

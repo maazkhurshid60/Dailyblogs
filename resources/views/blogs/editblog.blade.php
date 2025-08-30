@@ -33,26 +33,37 @@
             <!-- Title -->
             <div class="mb-3">
                 <label for="title" class="form-label">Blog Title</label>
-                <input type="text" class="form-control" id="title" name="title"
-                       placeholder="Enter blog title"
-                       value="{{ old('title', $blog->title) }}" required>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Enter blog title"
+                    value="{{ old('title', $blog->title) }}" required>
             </div>
 
             <!-- Author -->
             <div class="mb-3">
                 <label for="author" class="form-label">Blog Author</label>
-                <input type="text" class="form-control" id="author" name="author"
-                       placeholder="Author Name"
-                       value="{{ old('author', $blog->author) }}" required>
+                <input type="text" class="form-control" id="author" name="author" placeholder="Author Name"
+                    value="{{ old('author', $blog->author) }}" required>
             </div>
 
             <!-- Description -->
             <div class="mb-3">
                 <label for="desc" class="form-label">Blog Description</label>
                 <textarea class="form-control" id="desc" name="desc" rows="5"
-                          placeholder="Write your blog content here..." required>{{ old('desc', $blog->desc) }}</textarea>
+                    placeholder="Write your blog content here..." required>{{ old('desc', $blog->desc) }}</textarea>
             </div>
-
+            <div>
+                <label>Current Image</label><br>
+                @if ($blog->image)
+                    <img src="{{ asset($blog->image) }}" alt="{{ $blog->title }}" width="200" class="mb-2">
+                @else
+                    <p>No image uploaded</p>
+                @endif  
+            </div>
+            <!-- File -->
+            <div class="mb-3">
+                <label for="image" class="form-label">Blog New Image</label>
+                <input type="file" name="old_image" id="image" hidden value="{{ old('image', $blog->image) }}">
+                <input type="file" name="image" id="image" value="{{ old('image', $blog->image) }}">
+            </div>
             <!-- Submit Button -->
             <button type="submit" class="btn btn-primary">Update Blog</button>
         </form>
@@ -60,6 +71,7 @@
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+</script>
+
 </html>
