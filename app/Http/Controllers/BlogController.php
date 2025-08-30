@@ -24,10 +24,19 @@ class BlogController extends Controller
         // dd($request->all());
 
         $data = $request->validate([
-            'title' => 'required',
-            'desc' => 'required',
-            'author' => 'required',
+            'title' => 'required|max:255',
+            'desc' => 'required|string|min:100',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'author' => 'required|string|max:255',
         ]);
+
+        $data = $request->only(['title', 'desc' , 'author']);
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('uploads/blogs'), $imageName);
+            $data['image'] = 'uploads/blogs/' . $imageName;
+        }
 
         $newBlog = Blog::create($data);
 
@@ -41,15 +50,16 @@ class BlogController extends Controller
 
     public function update(Request $request, $id)
     {
-        
+
         $data = $request->validate([
-            'title' => 'required',
-            'desc' => 'required',
-            'author' => 'required',
+            'title' => 'required|max:255',
+            'desc' => 'required|string|min:100',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'author' => 'required|string|max:255',
         ]);
-        
+
         $blog = Blog::findOrFail($id);
-        
+
         // Update blog
         $blog->update([
             'title' => $data['title'],
@@ -57,36 +67,43 @@ class BlogController extends Controller
             'author' => $data['author'],
         ]);
         // dd($blog);
-        
-        return redirect(route('blogs.index'))->with('Success','Blog Edited');
+
+        return redirect(route('blogs.index'))->with('Success', 'Blog Edited');
     }
-    
-    
+
+
     public function destroy($id)
-{
-    try {
-        // 1. Find the record to delete
+    {
         $blog = Blog::findOrFail($id);
-        // 2. Delete the record
+
         $blog->delete();
-        // 3. Return a success response
-        return response()->json([
-            'success' => true,
-            'message' => 'Item deleted successfully.'
-        ], 200); // 200 OK status
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        // Handle the case where the item doesn't exist
-        return response()->json([
-            'success' => false,
-            'message' => 'Item not found.'
-        ], 404); // 404 Not Found status
-    } catch (\Exception $e) {
-        // Handle any other general exceptions (e.g., database connection issues)
-        return response()->json([
-            'success' => false,
-            'message' => 'An error occurred while deleting the item.',
-            'error' => env('APP_DEBUG') ? $e->getMessage() : 'Please try again later.' // Show error details only in debug mode
-        ], 500); // 500 Internal Server Error status
+        return redirect(route('blogs.index'));
     }
-}
+
+    // public function destroy($id)
+    // {
+    //     try {
+    //         $blog = Blog::findOrFail($id);
+
+    //         $blog->delete();
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Item deleted successfully.'
+    //         ], 200);
+    //     } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Item not found.'
+    //         ], 404);
+    //     } catch (\Exception $e) {
+
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'An error occurred while deleting the item.',
+    //             'error' => env('APP_DEBUG') ? $e->getMessage() : 'Please try again later.' // Show error details only in debug mode
+    //         ], 500);
+    //     }
+    // }
 }

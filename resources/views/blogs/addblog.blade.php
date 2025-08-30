@@ -51,6 +51,11 @@
                 <textarea class="form-control" id="description" name="desc" rows="5"
                     placeholder="Write your blog content here..." required></textarea>
             </div>
+            <!-- File -->
+            <div class="mb-3">
+                <label for="image" class="form-label">Blog Description</label>
+                <input type="file" name="image" id="image">
+            </div>
             <!-- Submit Button -->
             <button type="submit" class="btn btn-primary">Publish Blog</button>
         </form>

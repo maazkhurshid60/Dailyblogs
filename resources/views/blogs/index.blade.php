@@ -24,30 +24,34 @@
             </form>
         </div>
     </nav>
-    <h1 class="text-center mt-4">Welcome to Daily Blogs</h1>
-    <div class="container mt-5">
+    <h1 class="text-center mt-3">Welcome to Daily Blogs</h1>
+    <div class="container mt-3 mb-4">
         <div class="row">
-            <div class="col-sm-6  mb-3 mb-sm-0">
+            <div class="col-sm-6 ">
                 <h2>Latest Blogs</h2>
             </div>
-            <div class="col-sm-6  mb-3 mb-sm-0 d-flex justify-content-end align-items-center">
+            <div class="col-sm-6 d-flex justify-content-end align-items-center">
                 <a href="{{ route('blogs.add-blog') }}" class="btn btn-primary">Add New</a>
             </div>
         </div>
         <div class="row">
             @foreach ($blogs as $blog)
-                <div class="col-sm-6 col-md-4 col-lg-3 mb-3 mb-sm-0">
+                <div class="col-sm-6 col-md-4 col-lg-3  mb-3 mb-sm-0">
                     <div class="card">
                         <div class="card-body">
+                            @if ($blog->image)
+                                <img src="{{ asset($blog->image) }}" alt="{{ $blog->title }}" class="mb-2" style="width:100%; height: 200px; object-fit:cover; border-radius: 8px;">
+                            @endif
                             <h5 class="card-title">{{ $blog->title }}</h5>
                             <p class="card-text">{{ $blog->author }}</p>
-                            <p class="card-text">{{ $blog->desc }}</p>
+                            <p class="card-text">{{ Str::limit($blog->desc, 100, '...') }}</p>
                             <a href="#" class="btn btn-primary">See More</a>
                             <a href="{{ route('blogs.edit', ['blog' => $blog]) }}" class="btn btn-success">Edit</a>
-                            <form action="{{route('blogs.delete', ['blog' => $blog])}}" method="post">
-                                 @csrf
-                                 @method('delete')
-                                <button type="submit" class="btn btn-danger form-control" >Delete</button>
+                            <form action="{{ route('blogs.delete', ['blog' => $blog]) }}" method="post"
+                                style="display:inline-block; width:max-content">
+                                @csrf
+                                @method('delete')
+                                <button type="submit" class="btn btn-danger form-control">Delete</button>
                             </form>
                         </div>
                     </div>
